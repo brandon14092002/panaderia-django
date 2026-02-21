@@ -1,7 +1,8 @@
 """Django settings for panaderia project."""
 
-from pathlib import Path
 import os
+import dj_database_url
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -55,16 +56,11 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'panaderia.wsgi.application'
 
-# 📦 Base de datos: preparada para Postgres en Render
+# 📦 Base de datos usando DATABASE_URL
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get("POSTGRES_DB"),
-        "USER": os.environ.get("POSTGRES_USER"),
-        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
-        "HOST": os.environ.get("POSTGRES_HOST"),
-        "PORT": os.environ.get("POSTGRES_PORT"),
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = [

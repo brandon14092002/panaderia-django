@@ -5,11 +5,14 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-3fpiy)6xxwdg2@f7g*b7#71-)*vx0_bl+#qr&@qt&=^9g6zt_3'
+# 🔑 SECRET_KEY desde variable de entorno
+SECRET_KEY = os.environ.get("SECRET_KEY", "clave-local")
 
-DEBUG = False
+# ⚙️ DEBUG controlado por variable de entorno
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+# 🌐 ALLOWED_HOSTS desde variable de entorno
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", ".onrender.com")]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -52,10 +55,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'panaderia.wsgi.application'
 
+# 📦 Base de datos: preparada para Postgres en Render
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 

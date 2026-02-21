@@ -58,8 +58,8 @@ WSGI_APPLICATION = 'panaderia.wsgi.application'
 
 # 📦 Base de datos usando DATABASE_URL
 DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
+    'default': dj_database_url.config(
+        default=os.environ.get('DATABASE_URL')
     )
 }
 

@@ -1,0 +1,12 @@
+[
+  {"model": "pedidos.precio", "pk": 1, "fields": {"categoria": "forma", "opcion": "redonda_1", "valor": "6.00"}},
+  {"model": "pedidos.precio", "pk": 2, "fields": {"categoria": "forma", "opcion": "redonda_2", "valor": "8.00"}},
+  {"model": "pedidos.precio", "pk": 3, "fields": {"categoria": "sabor", "opcion": "vainilla", "valor": "0.00"}},
+  {"model": "pedidos.precio", "pk": 4, "fields": {"categoria": "sabor", "opcion": "red_velvet", "valor": "2.00"}},
+  {"model": "pedidos.precio", "pk": 5, "fields": {"categoria": "diseño", "opcion": "flores_comestibles", "valor": "0.50"}},
+  {"model": "pedidos.precio", "pk": 6, "fields": {"categoria": "diseño", "opcion": "flores_reales", "valor": "0.25"}},
+  {"model": "pedidos.precio", "pk": 7, "fields": {"categoria": "impresion", "opcion": "foto", "valor": "2.50"}},
+  {"model": "pedidos.precio", "pk": 8, "fields": {"categoria": "impresion", "opcion": "arroz", "valor": "3.00"}},
+  {"model": "pedidos.precio", "pk": 9, "fields": {"categoria": "base", "opcion": "plana", "valor": "5.00"}},
+  {"model": "pedidos.precio", "pk": 10, "fields": {"categoria": "base", "opcion": "alta", "valor": "10.00"}}
+]

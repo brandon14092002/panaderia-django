@@ -1,0 +1,10 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block content %}
+<div style="margin-bottom:20px; text-align:center;">
+    <img src="{% static 'img/logo.png' %}" alt="Logo D'Tulka" style="height:100px;">
+    <h2 style="margin-top:10px; font-family:Arial; color:#6B3E26;">D'Tulka – El Buen Pan</h2>
+</div>
+{{ block.super }}
+{% endblock %}

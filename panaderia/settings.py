@@ -13,7 +13,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "clave-local")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 # 🌐 ALLOWED_HOSTS desde variable de entorno, con valor por defecto seguro
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", "pan-dtulk.onrender.com")]
+ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", "panaderia-service.onrender.com")]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -59,7 +59,9 @@ WSGI_APPLICATION = 'panaderia.wsgi.application'
 # 📦 Base de datos usando DATABASE_URL
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
+        default=os.environ.get('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True
     )
 }
 

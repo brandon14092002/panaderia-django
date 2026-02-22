@@ -13,8 +13,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar el resto del proyecto
 COPY . .
 
+# Recolectar archivos estáticos (admin CSS/JS)
+RUN python manage.py collectstatic --noinput
+
 # Exponer el puerto que Render usa
 EXPOSE 8000
 
 # Comando para arrancar Django con gunicorn
-CMD gunicorn panaderia.wsgi:application --bind 0.0.0.0:$PORT
+CMD ["gunicorn", "panaderia.wsgi:application", "--bind", "0.0.0.0:$PORT"]

@@ -13,9 +13,15 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "clave-local")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 # 🌐 ALLOWED_HOSTS desde variable de entorno, con valor por defecto seguro
-ALLOWED_HOSTS = [os.environ.get("ALLOWED_HOSTS", "panaderia-service.onrender.com")]
+ALLOWED_HOSTS = [
+    os.environ.get("ALLOWED_HOSTS", "panaderia-service.onrender.com"),
+    "127.0.0.1",
+    "localhost",
+]
+
 
 INSTALLED_APPS = [
+    'grappelli',               
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -57,13 +63,27 @@ TEMPLATES = [
 WSGI_APPLICATION = 'panaderia.wsgi.application'
 
 # 📦 Base de datos usando DATABASE_URL
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL'),
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+# 📦 Base de datos
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    # Render (producción) usa PostgreSQL
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    # Local usa SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},

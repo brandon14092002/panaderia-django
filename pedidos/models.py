@@ -27,8 +27,12 @@ class Pedido(models.Model):
     nombre = models.CharField(max_length=100)
     celular = models.CharField(max_length=10)
     responsable = models.CharField(max_length=100)
-    fecha = models.DateField()
-    hora = models.TimeField()
+    fecha_pedido = models.DateField(verbose_name="Fecha de pedido", null=True, blank=True)
+    fecha_entrega = models.DateField(verbose_name="Fecha de entrega", null=True, blank=True)
+
+    hora_pedido = models.TimeField(verbose_name="Hora de pedido", null=True, blank=True)
+    hora_entrega = models.TimeField(verbose_name="Hora de entrega", null=True, blank=True)
+
 
     # -------------------------
     # Tipo de pastel
@@ -43,14 +47,20 @@ class Pedido(models.Model):
     # Sabores según tipo
     # -------------------------
     SABORES_NORMAL = [
-        ('vainilla', 'Vainilla'),
-        ('frutilla', 'Frutilla'),
-        ('chocolate', 'Chocolate'),
+        ('normal', 'Normal'),
+        ('naranja', 'Naranja'),
+        ('red_velvet', 'Red velvet'),
+        ('banano', 'Banano'),
     ]
     SABORES_RELLENO = [
-        ('naranja', 'Naranja'),
-        ('tres_leches', 'Tres Leches'),
-        ('chocolate', 'Chocolate'),
+        ('relleno', 'Relleno'),
+        ('humedo', 'Húmedo'),
+        ('tres_leches', 'Tres leches'),
+        ('selva_negra', 'Selva Negra'),
+        ('dos_amores', 'Dos amores'),
+        ('cheesecake', 'Cheesecake'),
+        ('leche_asada', 'Leche asada'),
+        ('tiramisu', 'Tiramisú'),
     ]
     sabor = models.CharField(max_length=30, blank=True, null=True)
 
@@ -97,7 +107,6 @@ class Pedido(models.Model):
     flores_reales = models.PositiveIntegerField(default=0)
     impresion_foto = models.PositiveIntegerField(default=0)
 
-    # 👇 ahora DecimalField para permitir fracciones (ejemplo: 0.5 papel arroz)
     impresion_arroz = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     BASES = [
@@ -107,19 +116,9 @@ class Pedido(models.Model):
     ]
     base_entrega = models.CharField(max_length=20, choices=BASES, blank=True, null=True)
 
-    # -------------------------
-    # Imagen del pedido
-    # -------------------------
     imagen = models.ImageField(upload_to='pedidos_fotos/', blank=True, null=True)
-
-    # -------------------------
-    # Observaciones
-    # -------------------------
     observacion = models.TextField(blank=True, null=True)
 
-    # -------------------------
-    # Contrato
-    # -------------------------
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     abono = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
@@ -141,7 +140,7 @@ class Pedido(models.Model):
             total += PrecioFormaTipoSabor.objects.get(
                 forma=self.forma,
                 tipo=self.tipo,
-                sabor=self.sabor
+                sabor=self.sabor.nombre if self.sabor else None
             ).valor
         except PrecioFormaTipoSabor.DoesNotExist:
             pass
@@ -162,7 +161,7 @@ class Pedido(models.Model):
         elif self.dibujo_mano == 'dificil':
             total += Decimal("3.00")
 
-        # --- Reglas especiales para perlas ---
+        # Reglas especiales
         if self.perlas in [1, 2]:
             total += Decimal("1.00")
         elif self.perlas == 3:
@@ -170,7 +169,6 @@ class Pedido(models.Model):
         elif self.perlas in [4, 5]:
             total += Decimal("3.00")
 
-        # --- Reglas especiales para papel dorado ---
         if self.papel_dorado in [1, 2]:
             total += Decimal("1.00")
         elif self.papel_dorado == 3:
@@ -178,7 +176,6 @@ class Pedido(models.Model):
         elif self.papel_dorado in [4, 5]:
             total += Decimal("3.00")
 
-        # --- Reglas especiales para papel plateado ---
         if self.papel_plateado in [1, 2]:
             total += Decimal("1.00")
         elif self.papel_plateado == 3:
@@ -189,11 +186,8 @@ class Pedido(models.Model):
         total += self.flores_comestibles * Decimal("0.50")
         total += self.flores_reales * Decimal("0.25")
         total += self.impresion_foto * Decimal("3.00")
-
-        # 👇 ahora permite fracciones de papel arroz
         total += self.impresion_arroz * Decimal("7.00")
 
-        # Base de entrega
         if self.base_entrega:
             try:
                 total += Precio.objects.get(categoria='base', opcion=self.base_entrega).valor

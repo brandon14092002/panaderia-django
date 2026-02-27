@@ -6,15 +6,16 @@ from .forms import PedidoForm
 
 @admin.register(Pedido)
 class PedidoAdmin(admin.ModelAdmin):
-    form = PedidoForm   # formulario dinámico
+    form = PedidoForm   # formulario dinámico para sabores según tipo
+
     list_display = (
         'id',
         'nombre',
         'tipo',
         'forma',
         'sabor',
-        'diseno_torta',     
-        'dibujo_mano',    
+        'diseno_torta',
+        'dibujo_mano',
         'perlas',
         'papel_dorado',
         'papel_plateado',
@@ -25,8 +26,8 @@ class PedidoAdmin(admin.ModelAdmin):
         'base_entrega',
         'estado',
         'total',
-        'observacion',      # 👈 muestra la observación
-        'imprimir_link'     # 👈 botón de impresión
+        'observacion',
+        'imprimir_link',   # 👈 botón de impresión
     )
     list_filter = ('tipo', 'forma', 'estado', 'diseno_torta', 'dibujo_mano')
     search_fields = ('nombre', 'celular', 'responsable')
@@ -34,7 +35,10 @@ class PedidoAdmin(admin.ModelAdmin):
 
     fieldsets = (
         ('Datos del cliente', {
-            'fields': ('nombre', 'celular', 'responsable', 'fecha', 'hora')
+            'fields': ('nombre', 'celular', 'responsable')
+        }),
+        ('Fechas y horas', {
+        'fields': ('fecha_pedido', 'fecha_entrega', 'hora_pedido', 'hora_entrega')    
         }),
         ('Tipo de pastel', {
             'fields': ('tipo', 'sabor')
@@ -60,12 +64,16 @@ class PedidoAdmin(admin.ModelAdmin):
             'fields': ('base_entrega',)
         }),
         ('Contrato', {
-            'fields': ('imagen','observacion','total','abono','estado')  # 👈 todos juntos aquí
+            'fields': ('imagen','observacion','total','abono','estado')
         }),
     )
 
     class Media:
+        # 👇 aquí puedes agregar JS/CSS personalizados si quieres mejorar la UI
         js = ('js/pedido_admin.js',)
+        css = {
+            'all': ('css/pedido_admin.css',)  # opcional: estilos personalizados
+        }
 
     # 👇 Método para mostrar el botón de impresión
     def imprimir_link(self, obj):

@@ -19,9 +19,8 @@ ALLOWED_HOSTS = [
     "localhost",
 ]
 
-
 INSTALLED_APPS = [
-    'grappelli',               
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -33,6 +32,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',   # 👈 agregado
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,11 +63,9 @@ TEMPLATES = [
 WSGI_APPLICATION = 'panaderia.wsgi.application'
 
 # 📦 Base de datos usando DATABASE_URL
-# 📦 Base de datos
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 if DATABASE_URL:
-    # Render (producción) usa PostgreSQL
     DATABASES = {
         'default': dj_database_url.config(
             default=DATABASE_URL,
@@ -76,14 +74,12 @@ if DATABASE_URL:
         )
     }
 else:
-    # Local usa SQLite
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
@@ -107,3 +103,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ⚡ WhiteNoise para servir estáticos en producción
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

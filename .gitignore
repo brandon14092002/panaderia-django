@@ -2,3 +2,6 @@ __pycache__/
 staticfiles/
 *.pyc
 *.txt
+db.sqlite3
+/media/
+

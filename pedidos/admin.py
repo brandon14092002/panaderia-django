@@ -41,7 +41,7 @@ class PedidoAdmin(admin.ModelAdmin):
             'fields': ('fecha_pedido', 'fecha_entrega', 'hora_pedido', 'hora_entrega')
         }),
         ('Tipo de pastel', {
-            'fields': ('tipo', 'sabor')
+            'fields': ('tipo', 'sabor', 'cantidad_normal', 'cantidad_relleno')
         }),
         ('Forma y tamaño', {
             'fields': ('forma',)

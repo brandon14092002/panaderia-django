@@ -33,6 +33,8 @@ class Pedido(models.Model):
     hora_pedido = models.TimeField(verbose_name="Hora de pedido", null=True, blank=True)
     hora_entrega = models.TimeField(verbose_name="Hora de entrega", null=True, blank=True)
 
+    cantidad_normal = models.PositiveIntegerField(default=0, verbose_name="Cantidad Normal")
+    cantidad_relleno = models.PositiveIntegerField(default=0, verbose_name="Cantidad Relleno")
 
     # -------------------------
     # Tipo de pastel
@@ -137,13 +139,16 @@ class Pedido(models.Model):
 
         # Precio base según forma + tipo + sabor
         try:
-            total += PrecioFormaTipoSabor.objects.get(
+            precio_base = PrecioFormaTipoSabor.objects.get(
                 forma=self.forma,
                 tipo=self.tipo,
-                sabor=self.sabor.nombre if self.sabor else None
+                sabor=self.sabor if self.sabor else None
             ).valor
         except PrecioFormaTipoSabor.DoesNotExist:
-            pass
+            precio_base = Decimal("0.00")
+
+        # Multiplicar precio base por cantidades
+        total += precio_base * (self.cantidad_normal + self.cantidad_relleno)
 
         # Diseño de torta
         if self.diseno_torta == 'facil':
